@@ -227,6 +227,7 @@ void Learner :: AskforLearn_Noop(const bool bIsStart)
 
     m_bIsIMLearning = false;
 
+    // 退出checkpoint模式
     m_poCheckpointMgr->ExitCheckpointMode();
 
     // 为什么这里调用两次
@@ -653,6 +654,9 @@ void Learner :: OnProposerSendSuccess(const PaxosMsg & oPaxosMsg)
     }
 
     //learn value.
+    // 因为这里是proposer提交成功之后调用该函数
+    // 所以是调用LearnValueWithoutWrite，因为在提交成功
+    // 时已经调用acceptor保存了数据
     m_oLearnerState.LearnValueWithoutWrite(
             oPaxosMsg.instanceid(),
             m_poAcceptor->GetAcceptorState()->GetAcceptedValue(),
